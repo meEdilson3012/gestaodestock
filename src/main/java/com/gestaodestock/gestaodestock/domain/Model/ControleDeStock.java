@@ -13,9 +13,10 @@ public class ControleDeStock {
     private  Integer saida;
     private  Integer stock_final;
     private BigDecimal girometrica;
-    private  BigDecimal receitaTotal;
+    private BigDecimal receitaTotal;
     private BigDecimal custoTotal;
-    private  BigDecimal lucorOUprejuizo;
+    private BigDecimal lucroOUprezuizo;
+
 
 
 }

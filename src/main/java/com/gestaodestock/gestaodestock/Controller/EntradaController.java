@@ -1,6 +1,7 @@
 package com.gestaodestock.gestaodestock.Controller;
 
 import com.gestaodestock.gestaodestock.domain.DTOs.Entrada_DTO;
+import com.gestaodestock.gestaodestock.domain.DTOs.Entrada_Listar_DTO;
 import com.gestaodestock.gestaodestock.domain.Exeptions.EntidadeNaoEncontrada;
 import com.gestaodestock.gestaodestock.domain.Exeptions.EntidadeemUso;
 import com.gestaodestock.gestaodestock.domain.Exeptions.QuantidadeNaoValida;
@@ -8,6 +9,7 @@ import com.gestaodestock.gestaodestock.domain.Model.Entrada;
 import com.gestaodestock.gestaodestock.domain.Model.Produto;
 import com.gestaodestock.gestaodestock.domain.Repository.EntradaRepository;
 import com.gestaodestock.gestaodestock.domain.Service.EntradaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,18 +28,19 @@ public class EntradaController {
     @Autowired
     private EntradaService entradaService;
     @GetMapping
-    public List<Entrada> listar(){
-       return  entradaRepository.findAll();
+    public List<Entrada_Listar_DTO> listar(){
+        List<Entrada_Listar_DTO> entrada_dtos = entradaRepository.findAll().stream().map(Entrada_Listar_DTO::new).toList();
+       return entrada_dtos ;
 
     }
 
     @GetMapping("/{entradaId}")
-    public ResponseEntity<Entrada_DTO> buscar(@PathVariable Long entradaId){
-        Entrada_DTO entrada_dto = entradaService.listarSingleton(entradaId);
+    public ResponseEntity<Entrada_Listar_DTO> buscar(@PathVariable(required = true) Long entradaId){
+        Entrada_Listar_DTO entrada_dto = entradaService.listarSingleton(entradaId);
         return ResponseEntity.ok(entrada_dto);
     }
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Entrada_DTO entrada_dto){
+    public ResponseEntity<?> adicionar(@RequestBody @Valid Entrada_DTO entrada_dto){
         try{
             entradaService.adicionar(entrada_dto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -47,14 +50,14 @@ public class EntradaController {
 
     }
     @PutMapping("/{entradaId}")
-    public ResponseEntity<?> actualizar(@PathVariable Long entradaId, @RequestBody Entrada_DTO entrada_dto){
+    public ResponseEntity<?> actualizar(@PathVariable(required = true)  Long entradaId, @RequestBody @Valid Entrada_DTO entrada_dto){
 
-        Entrada_DTO entrada_dto1 =   entradaService.actualizar(entradaId,entrada_dto);
+        Entrada_Listar_DTO entrada_dto1 =   entradaService.actualizar(entradaId,entrada_dto);
         return ResponseEntity.ok(entrada_dto1);
 
     }
     @DeleteMapping("/{entradaId}")
-    public  ResponseEntity<?> deletar(@PathVariable Long entradaId){
+    public  ResponseEntity<?> deletar(@PathVariable(required = true) Long entradaId){
         try{
             entradaService.deletar(entradaId);
             return ResponseEntity.noContent().build();

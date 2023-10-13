@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -19,12 +20,13 @@ public class Saida {
     private Long Id;
     @Column(name="coluna_quantidade")
     private int quantidade;
-
     @Column(name="coluna_dataSaida")
-    @CreationTimestamp
     private LocalDateTime dataSaida;
     @Column(name="coluna_motivoRetirada", length = 50)
     private String motivoRetirada;
+    @Column(name = "coluna_custo",nullable = false)
+    private BigDecimal custo;
+
 
     @ManyToOne
     @JoinColumn(name = "produtoId")
@@ -33,9 +35,10 @@ public class Saida {
     public Saida(Saida_DTO saida_dto) {
         Id = saida_dto.getId();
         this.quantidade = saida_dto.getQuantidade();
-        this.dataSaida = saida_dto.getDataSaida();
+
         this.motivoRetirada = saida_dto.getMotivoRetirada();
-        this.produto = produto;
+        this.produto = saida_dto.getProduto();
+        this.custo=BigDecimal.valueOf( saida_dto.getProduto().getPrecoVenda().intValue() * quantidade);
     }
     public Saida (){
         super();

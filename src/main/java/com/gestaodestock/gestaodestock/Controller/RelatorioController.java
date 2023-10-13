@@ -1,10 +1,8 @@
 package com.gestaodestock.gestaodestock.Controller;
 
+import com.gestaodestock.gestaodestock.domain.DTOs.Relatorio_DTO;
 import com.gestaodestock.gestaodestock.domain.Model.ControleDeStock;
-import com.gestaodestock.gestaodestock.domain.Model.Relatorio;
-import com.gestaodestock.gestaodestock.domain.Model.Saida;
-import com.gestaodestock.gestaodestock.domain.Repository.EntradaRepository;
-import com.gestaodestock.gestaodestock.domain.Repository.SaidaRepository;
+import com.gestaodestock.gestaodestock.domain.Repository.RelatoeioRepository;
 import com.gestaodestock.gestaodestock.domain.Service.ControleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +17,16 @@ public class RelatorioController {
 
     @Autowired
     private ControleService controleService;
-/*
-    @GetMapping
-    public Relatorio listar(){
-        Relatorio relatorio = new Relatorio();
-        relatorio.setEntradas(entradaRepository.findAll());
-        relatorio.setSaidas(saidaRepository.findAll());
-        return  relatorio;
+    @Autowired
+    private RelatoeioRepository relatoeioRepository;
+
+    @GetMapping("/listar")
+    public List<Relatorio_DTO> listar(){
+        List<Relatorio_DTO> relatorio_dtos= relatoeioRepository.findAll().stream().map(Relatorio_DTO::new).toList();
+        return  relatorio_dtos;
     }
-    */
-    @GetMapping
+
+    @GetMapping("/controle")
     public List<ControleDeStock> listarControle(){
 
         return  controleService.mostrarControle();

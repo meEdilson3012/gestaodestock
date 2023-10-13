@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class GestaodestockApplication {
 
-	@Autowired
-	private EntradaService entradaService;
 	public static void main(String[] args) {
 		SpringApplication.run(GestaodestockApplication.class, args);
 

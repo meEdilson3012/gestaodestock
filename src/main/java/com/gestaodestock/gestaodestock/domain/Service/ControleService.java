@@ -1,11 +1,10 @@
 package com.gestaodestock.gestaodestock.domain.Service;
 
-import com.gestaodestock.gestaodestock.domain.Model.ControleDeStock;
-import com.gestaodestock.gestaodestock.domain.Model.Entrada;
-import com.gestaodestock.gestaodestock.domain.Model.Produto;
-import com.gestaodestock.gestaodestock.domain.Model.Saida;
+import com.gestaodestock.gestaodestock.domain.DTOs.Relatorio_DTO;
+import com.gestaodestock.gestaodestock.domain.Model.*;
 import com.gestaodestock.gestaodestock.domain.Repository.EntradaRepository;
 import com.gestaodestock.gestaodestock.domain.Repository.ProdutoRepository;
+import com.gestaodestock.gestaodestock.domain.Repository.RelatoeioRepository;
 import com.gestaodestock.gestaodestock.domain.Repository.SaidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,8 @@ public class ControleService {
     private SaidaRepository saidaRepository;
     @Autowired
     private ProdutoRepository produtoRepository;
+    @Autowired
+    private RelatoeioRepository relatoeioRepository;
 
 
     public  List<ControleDeStock> mostrarControle(){
@@ -31,6 +32,7 @@ public class ControleService {
         List<Produto> produtos = produtoRepository.findAll();
 
         for (Produto produto:produtos) {
+
             ControleDeStock controleDeStock = new ControleDeStock();
             controleDeStock.setItem(produto.getNome()) ;
             controleDeStock.setEntrada(contarEntradas(entradaRepository.findByProdutoId(produto.getId()))) ;
@@ -38,6 +40,9 @@ public class ControleService {
             controleDeStock.setStock_final(controleDeStock.getEntrada()- controleDeStock.getSaida());
             BigDecimal metrica= BigDecimal.valueOf((controleDeStock.getSaida()/(controleDeStock.getStock_final()/2)));
             controleDeStock.setGirometrica(metrica);
+            controleDeStock.setReceitaTotal(BigDecimal.valueOf(produto.getPrecoVenda().intValue() * controleDeStock.getSaida()));
+            controleDeStock.setCustoTotal(BigDecimal.valueOf(produto.getPrecoCompra().intValue() *controleDeStock.getEntrada()));
+            controleDeStock.setLucroOUprezuizo(controleDeStock.getReceitaTotal().subtract(controleDeStock.getCustoTotal()));
             controleDeStocks.add(controleDeStock);
 
         }
@@ -62,7 +67,29 @@ public class ControleService {
     }
 
 
-    public  void relatorio(List<Saida> saidas,List<Entrada>  entradas ){
+    public  void cadastroRelatorio(Entrada entrada , String descricao,Boolean valor){
+        if (valor ==true) {
+            Relatorio relatorio = new Relatorio();
+            relatorio.setProduto(entrada.getProduto().getNome());
+            relatorio.setTipo("Entrada");
+            relatorio.setData(entrada.getDataEntrada());
+            relatorio.setQuantidade(entrada.getQuantidade());
+            relatorio.setPrecoTotal(BigDecimal.valueOf(entrada.getProduto().getPrecoCompra().intValue() + entrada.getQuantidade()));
+            relatorio.setDescricao(descricao);
+            Relatorio relatorioSalvo = relatoeioRepository.save(relatorio);
+        }
+    }
 
+    public  void cadastroRelatorio(Saida saida,String descricao,Boolean valor){
+        if (valor ==true) {
+            Relatorio relatorio = new Relatorio();
+            relatorio.setProduto(saida.getProduto().getNome());
+            relatorio.setTipo("Saida");
+            relatorio.setData(saida.getDataSaida());
+            relatorio.setQuantidade(saida.getQuantidade());
+            relatorio.setPrecoTotal(BigDecimal.valueOf(saida.getProduto().getPrecoVenda().intValue() + saida.getQuantidade()));
+            relatorio.setDescricao(descricao);
+            Relatorio relatorioSalvo = relatoeioRepository.save(relatorio);
+        }
     }
 }
