@@ -38,11 +38,11 @@ public class ControleService {
             controleDeStock.setEntrada(contarEntradas(entradaRepository.findByProdutoId(produto.getId()))) ;
             controleDeStock.setSaida(contarSaidas(saidaRepository.findByProdutoId(produto.getId())));
             controleDeStock.setStock_final(controleDeStock.getEntrada()- controleDeStock.getSaida());
-            BigDecimal metrica= BigDecimal.valueOf((controleDeStock.getSaida()/(controleDeStock.getStock_final()/2)));
+            float metrica= (controleDeStock.getSaida()/(controleDeStock.getStock_final()/2));
             controleDeStock.setGirometrica(metrica);
-            controleDeStock.setReceitaTotal(BigDecimal.valueOf(produto.getPrecoVenda().intValue() * controleDeStock.getSaida()));
-            controleDeStock.setCustoTotal(BigDecimal.valueOf(produto.getPrecoCompra().intValue() *controleDeStock.getEntrada()));
-            controleDeStock.setLucroOUprezuizo(controleDeStock.getReceitaTotal().subtract(controleDeStock.getCustoTotal()));
+            controleDeStock.setReceitaTotal(produto.getPrecoVenda().floatValue() * controleDeStock.getSaida());
+            controleDeStock.setCustoTotal(produto.getPrecoCompra().floatValue() *controleDeStock.getEntrada());
+            controleDeStock.setLucroOUprezuizo(controleDeStock.getReceitaTotal() - controleDeStock.getCustoTotal());
             controleDeStocks.add(controleDeStock);
 
         }
@@ -68,28 +68,32 @@ public class ControleService {
 
 
     public  void cadastroRelatorio(Entrada entrada , String descricao,Boolean valor){
-        if (valor ==true) {
+
             Relatorio relatorio = new Relatorio();
             relatorio.setProduto(entrada.getProduto().getNome());
             relatorio.setTipo("Entrada");
             relatorio.setData(entrada.getDataEntrada());
             relatorio.setQuantidade(entrada.getQuantidade());
             relatorio.setPrecoTotal(BigDecimal.valueOf(entrada.getProduto().getPrecoCompra().intValue() + entrada.getQuantidade()));
-            relatorio.setDescricao(descricao);
+            relatorio.setDescricao((valor == true)?descricao:"Actualização do Produto em Stock");
             Relatorio relatorioSalvo = relatoeioRepository.save(relatorio);
-        }
+
     }
 
     public  void cadastroRelatorio(Saida saida,String descricao,Boolean valor){
-        if (valor ==true) {
+
             Relatorio relatorio = new Relatorio();
             relatorio.setProduto(saida.getProduto().getNome());
             relatorio.setTipo("Saida");
             relatorio.setData(saida.getDataSaida());
             relatorio.setQuantidade(saida.getQuantidade());
             relatorio.setPrecoTotal(BigDecimal.valueOf(saida.getProduto().getPrecoVenda().intValue() + saida.getQuantidade()));
-            relatorio.setDescricao(descricao);
+            relatorio.setDescricao((valor == true)?descricao:"Actualização do Produto em Stock");
             Relatorio relatorioSalvo = relatoeioRepository.save(relatorio);
-        }
+
+    }
+    public List<Produto> verificarEstoque(){
+       List<Produto> produtos= produtoRepository.findByEstado(false);
+        return produtos;
     }
 }

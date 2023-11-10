@@ -18,13 +18,11 @@ public class Saida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(name="coluna_quantidade")
     private int quantidade;
-    @Column(name="coluna_dataSaida")
     private LocalDateTime dataSaida;
-    @Column(name="coluna_motivoRetirada", length = 50)
+    @Column(length = 50)
     private String motivoRetirada;
-    @Column(name = "coluna_custo",nullable = false)
+    @Column(nullable = false)
     private BigDecimal custo;
 
 
@@ -32,6 +30,7 @@ public class Saida {
     @JoinColumn(name = "produtoId")
     Produto produto;
 
+    private  boolean lixeira;
     public Saida(Saida_DTO saida_dto) {
         Id = saida_dto.getId();
         this.quantidade = saida_dto.getQuantidade();
@@ -43,4 +42,6 @@ public class Saida {
     public Saida (){
         super();
     }
+
+
 }

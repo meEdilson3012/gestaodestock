@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import  java.lang.Integer;
 import org.apache.tomcat.util.bcel.Const;
 
 import java.math.BigDecimal;
@@ -31,9 +32,10 @@ public class Produto_DTO {
 
     private BigDecimal precoVenda;
 @Min(value = 0,message = "O valor da quantidade minima deve ser maior ou igual a 0")
-    private Integer quanidadeMin;
-@Min(value = 0 ,message = "O valor da quantidade Maxima deve " +
-        "ser maior ou igual que o valor da quantidade minima")
+@NotNull(message = "O valor da quantidade minima deve ser maior ou igual a 0")
+    private Integer quantidadeMin;
+    @Min(value = 0,message = "O valor da quantidade maxima deve ser maior ou igual a 0")
+    @NotNull(message = "O valor da quantidade maxima deve ser maior ou igual a 0")
     private Integer quantidadeMax;
 
     public Produto_DTO(Produto produto) {
@@ -44,7 +46,7 @@ public class Produto_DTO {
         this.fornecedor = produto.getFornecedor();
         this.precoCompra = produto.getPrecoCompra();
         this.precoVenda = produto.getPrecoVenda();
-        this.quanidadeMin = produto.getQuanidadeMin();
+        this.quantidadeMin = produto.getQuanidadeMin();
         this.quantidadeMax = produto.getQuanidadeMin();
     }
 

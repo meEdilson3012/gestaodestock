@@ -4,6 +4,7 @@ import com.gestaodestock.gestaodestock.domain.DTOs.Saida_DTO;
 import com.gestaodestock.gestaodestock.domain.DTOs.Saida_Listar_DTO;
 import com.gestaodestock.gestaodestock.domain.Exeptions.EntidadeNaoEncontrada;
 import com.gestaodestock.gestaodestock.domain.Exeptions.QuantidadeNaoValida;
+import com.gestaodestock.gestaodestock.domain.Exeptions.StatusNaoEncontrada;
 import com.gestaodestock.gestaodestock.domain.Model.Saida;
 import com.gestaodestock.gestaodestock.domain.Repository.SaidaRepository;
 import com.gestaodestock.gestaodestock.domain.Service.SaidaService;
@@ -27,7 +28,7 @@ public class SaidaController {
 
     @GetMapping
     public List<Saida_Listar_DTO> listar(){
-        List<Saida_Listar_DTO> saida_dtos =saidaRepository.findAll().stream().map(Saida_Listar_DTO::new).toList();
+        List<Saida_Listar_DTO> saida_dtos =saidaService.listarSaida();
         return  saida_dtos;
     }
     @GetMapping("/{saidaId}")
@@ -41,7 +42,7 @@ public class SaidaController {
         try{
             Saida_Listar_DTO saidaSalva= saidaService.adicionar(saida_dto);
             return ResponseEntity.ok(saidaSalva);
-        }catch (EntidadeNaoEncontrada e){
+        }catch (StatusNaoEncontrada e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -53,11 +54,8 @@ public class SaidaController {
     }
     @DeleteMapping("/{saidaId}")
     public ResponseEntity<?> deletar(@PathVariable(required = true) Long saidaId){
-        try{
             saidaService.deletar(saidaId);
             return ResponseEntity.noContent().build();
-        }catch (EntidadeNaoEncontrada e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
     }
 }

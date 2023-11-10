@@ -19,19 +19,18 @@ public class Entrada {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(name="coluna_quantidade",nullable = false)
+    @Column(nullable = false)
     private int quantidade;
 
-    @Column(name="coluna_dataEntrada")
     @CreationTimestamp
     private LocalDateTime dataEntrada;
-    @Column(name="coluna_numeroLote")
     private int numeroLote;
-    @Column(name = "coluna_custo",nullable = false)
+    @Column(nullable = false)
     private BigDecimal custo;
     @ManyToOne
     @JoinColumn(name = "produtoId")
     Produto produto;
+    private  boolean lixeira;
 
     public Entrada (Entrada_DTO entrada_dto) {
         this.Id = entrada_dto.getId();

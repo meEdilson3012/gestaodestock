@@ -12,10 +12,10 @@ public class ControleDeStock {
     private Integer entrada;
     private  Integer saida;
     private  Integer stock_final;
-    private BigDecimal girometrica;
-    private BigDecimal receitaTotal;
-    private BigDecimal custoTotal;
-    private BigDecimal lucroOUprezuizo;
+    private float girometrica;
+    private float receitaTotal;
+    private float custoTotal;
+    private float lucroOUprezuizo;
 
 
 

@@ -5,6 +5,7 @@ import com.gestaodestock.gestaodestock.domain.DTOs.Entrada_Listar_DTO;
 import com.gestaodestock.gestaodestock.domain.Exeptions.EntidadeNaoEncontrada;
 import com.gestaodestock.gestaodestock.domain.Exeptions.EntidadeemUso;
 import com.gestaodestock.gestaodestock.domain.Exeptions.QuantidadeNaoValida;
+import com.gestaodestock.gestaodestock.domain.Exeptions.StatusNaoEncontrada;
 import com.gestaodestock.gestaodestock.domain.Model.Entrada;
 import com.gestaodestock.gestaodestock.domain.Model.Produto;
 import com.gestaodestock.gestaodestock.domain.Repository.EntradaRepository;
@@ -29,7 +30,7 @@ public class EntradaController {
     private EntradaService entradaService;
     @GetMapping
     public List<Entrada_Listar_DTO> listar(){
-        List<Entrada_Listar_DTO> entrada_dtos = entradaRepository.findAll().stream().map(Entrada_Listar_DTO::new).toList();
+        List<Entrada_Listar_DTO> entrada_dtos = entradaService.listarEntrada();
        return entrada_dtos ;
 
     }
@@ -44,7 +45,7 @@ public class EntradaController {
         try{
             entradaService.adicionar(entrada_dto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        }catch (EntidadeNaoEncontrada e) {
+        }catch (StatusNaoEncontrada e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
@@ -58,11 +59,9 @@ public class EntradaController {
     }
     @DeleteMapping("/{entradaId}")
     public  ResponseEntity<?> deletar(@PathVariable(required = true) Long entradaId){
-        try{
+
             entradaService.deletar(entradaId);
             return ResponseEntity.noContent().build();
-        }catch (EntidadeNaoEncontrada e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
     }
 }
