@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,29 +40,28 @@ public class ProdutoController {
             return  ResponseEntity.ok(produto_dto);
         return  ResponseEntity.notFound().build();
     }
-    @GetMapping("/nomes/{produtoNome}")
-    public ResponseEntity<List<Produto_DTO>> buscarNome(@PathVariable(required = true) String produtoNome){
-        List<Produto_DTO> produto_dtos = produtoRepository.findAllByNomeContaining(produtoNome).stream().map(Produto_DTO::new).toList();
-        if (produto_dtos != null)
+    @GetMapping("/buscarnomes/{produtoNome}")
+    public ResponseEntity<?> buscarNome(@PathVariable(required = true) String produtoNome){
+        List<Produto_Listar_DTO> produto_dtos = produtoService.buscaPorNome(produtoNome);
+
             return  ResponseEntity.ok(produto_dtos);
 
-        return  ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/nome/{produtoNome}")
+    @GetMapping("/buscarnome/{produtoNome}")
     public ResponseEntity<Produto_Listar_DTO> buscarNomeUnica(@PathVariable(required = true) String produtoNome){
-        Produto_Listar_DTO produto_dto = produtoService.buscaPorNome(produtoNome);
-        if (produto_dto != null)
+        Produto_Listar_DTO produto_dto = produtoService.buscaPorNomes(produtoNome);
+
             return  ResponseEntity.ok(produto_dto);
-        return  ResponseEntity.notFound().build();
+
     }
 
-    @GetMapping("/categoria/{produtoCategoria}")
+    @GetMapping("/buscarcategoria/{produtoCategoria}")
     public ResponseEntity<?> buscarCategoria(@PathVariable(required = true) String produtoCategoria){
-        Optional<Produto_Listar_DTO> produto_dto = produtoService.buscaPorCategoria(produtoCategoria);
-        if (produto_dto.isPresent())
-            return  ResponseEntity.ok(produto_dto.stream().toList());
-        return  ResponseEntity.notFound().build();
+       List<Produto_Listar_DTO> produto_dto = produtoService.buscaPorCategoria(produtoCategoria);
+
+        return  ResponseEntity.ok(produto_dto);
+
     }
 
 

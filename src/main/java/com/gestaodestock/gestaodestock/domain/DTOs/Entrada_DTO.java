@@ -22,6 +22,7 @@ import java.util.Date;
 public class Entrada_DTO{
     Long id;
     @NotNull(message = "O valor da quantidade não deve ser nula")
+    @Min(value = 1,message = "A quantidade deve ser maior ou igual a zero")
     int quantidade;
     @Min(value = 0,message = "O numero de lote deve ser maior ou igual a zero")
     int numeroLote;

@@ -2,6 +2,7 @@ package com.gestaodestock.gestaodestock.Controller;
 
 import com.gestaodestock.gestaodestock.domain.DTOs.Relatorio_DTO;
 import com.gestaodestock.gestaodestock.domain.Model.ControleDeStock;
+import com.gestaodestock.gestaodestock.domain.Model.Produto;
 import com.gestaodestock.gestaodestock.domain.Repository.RelatoeioRepository;
 import com.gestaodestock.gestaodestock.domain.Service.ControleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class RelatorioController {
     @Autowired
     private RelatoeioRepository relatoeioRepository;
 
-    @GetMapping("/listar")
+    @GetMapping("/movimentacao")
     public List<Relatorio_DTO> listar(){
         List<Relatorio_DTO> relatorio_dtos= relatoeioRepository.findAll().stream().map(Relatorio_DTO::new).toList();
         return  relatorio_dtos;
@@ -30,5 +31,11 @@ public class RelatorioController {
     public List<ControleDeStock> listarControle(){
 
         return  controleService.mostrarControle();
+    }
+
+    @GetMapping("/alertadestock")
+    public List<Produto> listarprod(){
+
+        return  controleService.verificarEstoque();
     }
 }
